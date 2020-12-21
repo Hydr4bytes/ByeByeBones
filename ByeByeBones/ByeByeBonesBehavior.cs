@@ -19,10 +19,13 @@ namespace ByeByeBones
 
         float NeckBreakForce;
 
-        void Awake()
+        void Start()
         {
             brain = GetComponent<AIBrain>();
             OriginalDeathSounds = brain.behaviour.sfx.death;
+
+            if (brain.puppetMaster.muscles[brain.puppetMaster.GetMuscleIndex(HumanBodyBones.Head)] != null)
+                brain.puppetMaster.muscles[brain.puppetMaster.GetMuscleIndex(HumanBodyBones.Head)].IgnoreAngularLimits(false);
 
             attack = new Attack();
             attack.damage = 99999;
@@ -43,8 +46,6 @@ namespace ByeByeBones
             } else
             {
                 brain.behaviour.sfx.death = OriginalDeathSounds;
-                if (brain.puppetMaster.muscles[brain.puppetMaster.GetMuscleIndex(HumanBodyBones.Head)] != null)
-                    brain.puppetMaster.muscles[brain.puppetMaster.GetMuscleIndex(HumanBodyBones.Head)].IgnoreAngularLimits(false);
                 Destroy(this);
             }
         }

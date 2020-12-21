@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 
+using Harmony;
+
 namespace ByeByeBones
 {
     public static class BuildInfo
@@ -42,24 +44,18 @@ namespace ByeByeBones
             MelonPrefs.RegisterFloat("ByeByeBones", "NeckBreakForce", 100.0f);
 
 			LoadedSnapClips = LoadClipsFromDir("UserData\\ByeByeBones\\");
-        }
 
-        public override void OnLevelWasLoaded(int level)
-        {
-            //Eatingbehaviour eating = GameObject.Find("Head").AddComponent<Eatingbehaviour>();
-        }
+			harmonyInstance.Patch(typeof(AIBrain).GetMethod("Awake"), null, new HarmonyMethod(typeof(ByeByeBones).GetMethod("BrainPatch")));
+		}
 
-        public override void OnUpdate()
-        {
-            foreach(AIBrain brain in GameObject.FindObjectsOfType<AIBrain>())
-            {
-                if(brain.gameObject.GetComponent<ByeByeBonesBehavior>() == null && !brain.isDead)
-                {
-                    ByeByeBonesBehavior b = brain.gameObject.AddComponent<ByeByeBonesBehavior>();
-					b.SnapSounds = LoadedSnapClips.ToArray();
-                }
-            }
-        }
+		public void BrainPatch(AIBrain __instance)
+		{
+			if (__instance.gameObject.GetComponent<ByeByeBonesBehavior>() == null && !__instance.isDead)
+			{
+				ByeByeBonesBehavior b = __instance.gameObject.AddComponent<ByeByeBonesBehavior>();
+				b.SnapSounds = LoadedSnapClips.ToArray();
+			}
+		}
 
         List<AudioClip> LoadClipsFromDir(string soundsPath)
         {
