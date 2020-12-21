@@ -33,7 +33,7 @@ namespace ByeByeBones
 
     public class ByeByeBones : MelonMod
     {
-		List<AudioClip> LoadedSnapClips;
+		static List<AudioClip> LoadedSnapClips;
 
         public override void OnApplicationStart()
         {
@@ -48,7 +48,7 @@ namespace ByeByeBones
 			harmonyInstance.Patch(typeof(AIBrain).GetMethod("Awake"), null, new HarmonyMethod(typeof(ByeByeBones).GetMethod("BrainPatch")));
 		}
 
-		public void BrainPatch(AIBrain __instance)
+		public static void BrainPatch(AIBrain __instance)
 		{
 			if (__instance.gameObject.GetComponent<ByeByeBonesBehavior>() == null && !__instance.isDead)
 			{
