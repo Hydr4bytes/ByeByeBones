@@ -46,7 +46,6 @@ namespace ByeByeBones
             } else
             {
                 brain.behaviour.sfx.death = OriginalDeathSounds;
-                Destroy(this);
             }
         }
     }
